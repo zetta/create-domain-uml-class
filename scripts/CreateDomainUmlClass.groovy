@@ -19,46 +19,68 @@
 Ant.property(environment:"env")
 grailsHome = Ant.antProject.properties."env.GRAILS_HOME"
 
+names = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S']
 
 includeTargets << grailsScript("Init")
 includeTargets << new File ( "${grailsHome}/scripts/Bootstrap.groovy" )
 
 fileName = 'classes.uml'
-//url = 'http://yuml.me'
 
 target(main: "The description of the script goes here!") {
     depends( configureProxy, packageApp, classpath, loadApp, configureApp )
     generate(grailsApp.domainClasses)
 }
 
-setDefaultTarget(main)
+setDefaultTarget( main )
 
 private void generate(def domainClasses){
     def classes = ''
-    def relationships = ''
+    def relationships = "\n\n"
+    def renders = 'drawObjects('
+    def positions = 'leftToRight.top(70)('
+    def assoc = ''
+    def i = 0
     domainClasses.each { domainClass ->
         def relations = classDef = ''
-	    //def classDef = ''
+	    def classDef = "Class.${domainClass.name}(\"${domainClass.name}\")\n\t("
 	    domainClass.properties.each{ prop ->
-            if(prop.name != 'id' && prop.name != 'version'){
-                if (prop.isAssociation()){
-                    // if its association only show the do the owning side
+            if(prop.name != 'id' && prop.name != 'version')
+            {
+                assoc = ''
+                if (prop.isAssociation())
+                {
                     if(!prop.isBidirectional() || prop.isOwningSide())
+                    {
+                        assoc = "(" + getRelationship(prop) + ")"
                         relations += getRelationship(domainClass.name, prop) + "\n"
-                } else {
-                    classDef += resolveName(prop.getType().getName()) + ' ' + prop.name + ";\n"
+                    }   
                 }
+                classDef +=  '"-' + prop.name + ": " + resolveName(prop.getType().getName()) + " ${assoc} \",\n\t"
+                
             }
         }
-        classDef = (classDef == "") ? '' : '|' + classDef
-        classDef += "[${domainClass.name}${classDef}],"
+        classDef += "\t) ();\n"
         classes += classDef
         relationships += relations
+        i++
     }
-    createFile(classes + relationships)
+
+    
+    domainClasses.each { domainClass ->
+        renders += domainClass.name + ','
+        positions += domainClass.name + ','
+    }
+    renders = renders[0..(renders.length()-2)]
+    positions = positions[0..(positions.length()-2)]
+
+    renders += ");\n"
+    positions += ");\n"
+
+    createFile(classes + positions + renders + relationships)
 }
 
-private String getRelationship(name, prop){
+private String getRelationship(prop)
+{
 
     def association = ''
     if (prop.isOneToMany()){
@@ -71,8 +93,14 @@ private String getRelationship(name, prop){
     if(prop.isBidirectional()){
         association = '<' + association
     }
-    "[${name}]${association}[${resolveName(prop.getReferencedPropertyType().getName())}],"
+    association
 }
+
+private String getRelationship(name, prop)
+{
+    "clink(association)( ${name}, ${resolveName(prop.getReferencedPropertyType().getName())} );\n"
+}
+
 
 
 private resolveName(def name){

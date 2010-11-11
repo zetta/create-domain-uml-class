@@ -1,21 +1,17 @@
 class CreateDomainUmlClassGrailsPlugin {
-    // the plugin version
     def version = "0.1"
-    // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.5 > *"
-    // the other plugins this plugin depends on
     def dependsOn = [:]
-    // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/views/error.gsp"
     ]
 
     // TODO Fill in these fields
-    def author = "Your name"
-    def authorEmail = ""
-    def title = "Plugin summary/headline"
+    def author = "Juan Carlos Clemente"
+    def authorEmail = "zetaweb@gmail.com"
+    def title = "Create Domain Uml Class"
     def description = '''\\
-Brief description of the plugin.
+    Create UML Class diagrams for Grails Domain Classes
 '''
 
     // URL to the plugin's documentation
