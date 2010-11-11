@@ -1,0 +1,17 @@
+<plugin name='create-domain-uml-class' version='0.1' grailsVersion='1.3.5 &gt; *'>
+  <author>Juan Carlos Clemente</author>
+  <authorEmail>zetaweb@gmail.com</authorEmail>
+  <title>Create Domain Uml Class</title>
+  <description>\
+    Create UML Class diagrams for Grails Domain Classes
+</description>
+  <documentation>http://grails.org/plugin/create-domain-uml-class</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>UrlMappings</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>
